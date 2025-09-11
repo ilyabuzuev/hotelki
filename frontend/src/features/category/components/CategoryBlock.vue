@@ -1,50 +1,62 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useQuasar } from 'quasar';
-import CategoryList from './CategoryList.vue';
-import CategoryActions from './CategoryActions.vue';
 import { useRoute } from 'vue-router';
 import { useCategoryStore } from '../store/categoryStore';
 import { useWishStore } from 'src/features/wish/store/wishSore';
+import { useNotify } from 'src/app/composables/useNotify';
+import { NotifyMessage } from 'src/app/enums/notifyMessage';
+import CategoryList from './CategoryList.vue';
+import CategoryActions from './CategoryActions.vue';
 
 const route = useRoute();
-const $q = useQuasar();
-const categoryStore = useCategoryStore();
-const wishStore = useWishStore();
+const notify = useNotify();
+const category = useCategoryStore();
+const wish = useWishStore();
 const tab = ref();
 
-function onTabUpdate() {
-  wishStore.fetchWishList(tab.value);
+class Validator {
+  private static regex = /^[a-z]+$/;
+
+  public static validate(str: string): boolean {
+    return this.regex.test(str);
+  }
+}
+
+async function fetchWishList() {
+  await wish.fetchAllByCategory(tab.value);
 }
 
 onMounted(async () => {
-  await categoryStore.fetchCategoryList();
+  await category.fetchAll();
 
-  const category = route.params.category;
-  if (!category) return;
+  const param = route.params.category;
+  if (!param) return;
 
-  const categoryName = category.toString();
-  const isCategoryExistingInList = categoryStore.checkCategoryExistingByName(categoryName);
+  const categoryName = param.toString();
+
+  if (!Validator.validate(categoryName)) {
+    notify.show('negative', NotifyMessage.CATEGORY_SYMBOL_ERROR);
+    return;
+  }
+
+  const isCategoryExistingInList = category.checkExisting(categoryName);
 
   if (!isCategoryExistingInList) {
-    $q.notify({
-      type: 'negative',
-      message: 'Категории, указанной в адресной строке не существует в списке категорий',
-    });
-
+    notify.show('negative', NotifyMessage.CATEGORY_EXISTING_ERROR);
     return;
   }
 
   tab.value = categoryName;
-  wishStore.fetchWishList(categoryName);
+
+  await fetchWishList();
 });
 </script>
 
 <template>
   <q-tabs
-    v-if="!categoryStore.loading"
+    v-if="!category.loading"
     v-model="tab"
-    @update:model-value="onTabUpdate"
+    @update:model-value="fetchWishList"
     vertical
     class="text-grey-6"
     active-color="primary"

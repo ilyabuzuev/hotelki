@@ -11,13 +11,11 @@ export const useCategoryStore = defineStore('category', () => {
   async function create(category: CategoryCreateDto): Promise<Category | false> {
     const res = await CategoryService.create(category);
     if (!res) return false;
-
     list.value.push(res);
-
     return res;
   }
 
-  async function fetchCategoryList() {
+  async function fetchAll() {
     loading.value = true;
 
     try {
@@ -31,8 +29,8 @@ export const useCategoryStore = defineStore('category', () => {
     }
   }
 
-  function addCategory(category: Category): void | false {
-    const isCategoryExist = checkCategoryExistingByName(category.name);
+  function add(category: Category): void | false {
+    const isCategoryExist = checkExisting(category.name);
 
     if (isCategoryExist) {
       return false;
@@ -41,7 +39,7 @@ export const useCategoryStore = defineStore('category', () => {
     list.value.push(category);
   }
 
-  function checkCategoryExistingByName(name: string): boolean {
+  function checkExisting(name: string): boolean {
     return list.value.find((category) => category.name === name) ? true : false;
   }
 
@@ -49,8 +47,8 @@ export const useCategoryStore = defineStore('category', () => {
     list,
     loading,
     create,
-    fetchCategoryList,
-    addCategory,
-    checkCategoryExistingByName,
+    fetchAll,
+    add,
+    checkExisting,
   };
 });

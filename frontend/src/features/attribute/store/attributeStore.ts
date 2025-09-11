@@ -2,16 +2,14 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Attribute } from '../api/types/Attribute';
 
+type Attr = Omit<Attribute, 'value'>;
+
 export const useAttributeStore = defineStore('attribute', () => {
-  const list = ref<Attribute[]>([]);
+  const list = ref<Attr[]>([]);
 
-  function addAttribute(attribute: Attribute): void | false {
+  function addAttribute(attribute: Attr): void | false {
     const isAttributeExist = checkAttributeExistingByName(attribute.name);
-
-    if (isAttributeExist) {
-      return false;
-    }
-
+    if (isAttributeExist) return false;
     list.value.push(attribute);
   }
 

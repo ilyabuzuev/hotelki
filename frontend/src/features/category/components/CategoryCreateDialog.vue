@@ -20,9 +20,15 @@ async function onSubmit() {
     return;
   }
 
+  if (attributeStore.list.length === 0) {
+    $q.notify({ type: 'negative', message: 'Добавь аттрибут пжпжпж, хотя бы один должен быть' });
+    return;
+  }
+
   const category: CategoryCreateDto = {
     name: name.value,
     value: value.value,
+    attributes: attributeStore.list,
   };
 
   const res = await categoryStore.create(category);

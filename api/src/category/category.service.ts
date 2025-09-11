@@ -19,6 +19,16 @@ export class CategoryService {
       return 'Категория уже существует';
     }
 
-    return await this.prisma.category.create({ data: category });
+    const { attributes, ...categoryData } = category;
+
+    return await this.prisma.category.create({
+      data: {
+        ...categoryData,
+        attributes: { create: attributes },
+      },
+      include: {
+        attributes: true,
+      },
+    });
   }
 }

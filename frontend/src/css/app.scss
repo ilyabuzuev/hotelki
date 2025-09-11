@@ -1,6 +1,6 @@
 // app global css in SCSS form
 @import './reset';
 
-a {
-  text-decoration: none;
+.bg-surface {
+  background-color: $surface;
 }

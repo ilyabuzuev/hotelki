@@ -12,7 +12,7 @@ const name = ref<string | null>(null);
 const type = ref(null);
 
 function onSubmit() {
-  const attribute: Attribute = {
+  const attribute: Omit<Attribute, 'value'> = {
     name: name.value!,
     type: type.value!,
   };
@@ -52,7 +52,7 @@ function resetFieds() {
 
           <div>
             <span class="text-body1 text-grey-8">Тип аттрибута</span>
-            <q-select v-model="type" :options="['String', 'Price']" outlined dense />
+            <q-select v-model="type" :options="['String', 'Number', 'Price']" outlined dense />
           </div>
         </div>
       </q-card-section>

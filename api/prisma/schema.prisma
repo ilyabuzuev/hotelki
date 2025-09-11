@@ -13,12 +13,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AttributeType {
+  String
+  Number
+  Price
+}
+
 model Category {
   id String @id @default(uuid())
   name String @unique
   value String
   attributes Attribute[]
-  categoryId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 model Attribute {
@@ -27,4 +34,25 @@ model Attribute {
   type String
   category Category @relation(fields: [categoryId], references: [id])
   categoryId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Wish {
+  id String @id @default(uuid())
+  categoryType String
+  name String
+  data WishData[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model WishData {
+  id String @id @default(uuid())
+  key String
+  value String
+  wish Wish @relation(fields: [wishId], references: [id])
+  wishId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
