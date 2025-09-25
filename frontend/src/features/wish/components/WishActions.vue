@@ -14,13 +14,15 @@ async function onClick() {
 <template>
   <q-btn
     @click="onClick"
-    label="Добавить хотелку"
     color="primary"
     icon-right="add"
-    unelevated
-    no-caps
     :loading="wish.isWishAttributeListLoading"
-  />
+    fab-mini
+    flat
+    no-caps
+  >
+    <q-tooltip transition-show="fade" transition-hide="fade"> Привет </q-tooltip>
+  </q-btn>
 
   <wish-create-dialog />
 </template>

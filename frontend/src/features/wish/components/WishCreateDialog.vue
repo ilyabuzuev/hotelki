@@ -9,6 +9,7 @@ import { NotifyMessage } from 'src/app/enums/notifyMessage';
 const wish = useWishStore();
 const notify = useNotify();
 const name = ref<string | null>(null);
+// const img = ref<string | null>(null);
 
 async function onSubmit() {
   console.log(wish.attributeList);
@@ -52,6 +53,8 @@ function onCancel() {
         <q-card-section>
           <div class="q-gutter-y-xs">
             <app-input-field v-model="name" label="Название" />
+
+            <!-- <app-input-field v-model="img" label="Фотография" /> -->
 
             <div v-for="(attribute, index) in wish.attributeList" :key="index">
               <app-input-field

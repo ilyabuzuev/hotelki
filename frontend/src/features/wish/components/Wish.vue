@@ -26,7 +26,12 @@ function onDeleteClick() {
 
 <template>
   <div class="wish row no-wrap q-pa-md bg-surface rounded-borders">
-    <div>
+    <div class="wish__img row items-center justify-center bg-grey-4 rounded-borders">
+      <div>
+        <q-icon name="photo_camera" size="xl" color="grey-5" />
+      </div>
+    </div>
+    <div class="q-ml-md">
       <div class="q-mb-md">
         <span class="text-h4">{{ name }}</span>
       </div>
@@ -49,3 +54,12 @@ function onDeleteClick() {
 
   <wish-delete-dialog ref="refWishDeleteDialog" :id="id" />
 </template>
+
+<style lang="scss">
+.wish {
+  &__img {
+    width: 160px;
+    height: 160px;
+  }
+}
+</style>

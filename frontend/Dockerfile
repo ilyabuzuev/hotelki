@@ -1,9 +1,10 @@
 FROM node:22.18.0-alpine as build-stage
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package*.json .
+RUN npm ci --ignore-scripts
 COPY . .
-# RUN npm run quasar build
+RUN npm run postinstall
+RUN npm run build
 
 FROM nginx:alpine as production-stage
 COPY --from=build-stage /app/dist/spa /usr/share/nginx/html

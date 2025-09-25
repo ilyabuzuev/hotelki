@@ -1,12 +1,21 @@
 import type { RouteRecordRaw } from 'vue-router';
+import { RouteName } from '../enums/routeName';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: ':category', component: () => import('pages/IndexPage.vue') },
+      {
+        path: '',
+        component: () => import('pages/IndexPage.vue'),
+        name: RouteName.HOME,
+      },
+      {
+        path: ':category',
+        component: () => import('pages/IndexPage.vue'),
+        name: RouteName.CATEGORY,
+      },
     ],
   },
 

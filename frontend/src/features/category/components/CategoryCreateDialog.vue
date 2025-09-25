@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useQuasar } from 'quasar';
 import { useCategoryStore } from '../store/categoryStore';
 import { useAttributeStore } from 'src/features/attribute/store/attributeStore';
 import AppInputField from 'src/shared/components/AppInputField.vue';
 import AttributeList from 'src/features/attribute/components/AttributeList.vue';
 import type { CategoryCreateDto } from '../api/dto/CategoryCreateDto';
+import { useNotify } from 'src/app/composables/useNotify';
+import { NotifyMessage } from 'src/app/enums/notifyMessage';
 
 const model = defineModel<boolean>({ required: true });
-const $q = useQuasar();
+const notify = useNotify();
 const categoryStore = useCategoryStore();
 const attributeStore = useAttributeStore();
 const name = ref<string | null>(null);
@@ -21,7 +22,7 @@ async function onSubmit() {
   }
 
   if (attributeStore.list.length === 0) {
-    $q.notify({ type: 'negative', message: 'Добавь аттрибут пжпжпж, хотя бы один должен быть' });
+    notify.show('negative', NotifyMessage.ATTRIBUTE_EXISTING_ERROR);
     return;
   }
 
@@ -36,7 +37,7 @@ async function onSubmit() {
   console.log(attributeStore.list);
 
   if (!res) {
-    $q.notify({ type: 'negative', message: 'Категория с таким наименованием уже существует' });
+    notify.show('negative', NotifyMessage.CATEGORY_ALREADY_EXIST);
     return;
   }
 

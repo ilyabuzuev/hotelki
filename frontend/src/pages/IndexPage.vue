@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import CategoryBlock from 'src/features/category/components/CategoryBlock.vue';
 import WishList from 'src/features/wish/components/WishList.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 onMounted(() => {
   console.log('mounted');
 });
+
+watch(
+  () => route.params,
+  () => {
+    console.log('change route');
+  },
+);
 </script>
 
 <template>
