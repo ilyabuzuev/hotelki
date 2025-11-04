@@ -9,3 +9,11 @@ body {
 .bg-surface {
   background-color: $surface;
 }
+
+.q-btn:not(.q-btn--fab-mini, .q-btn--fab) {
+  border-radius: 6px;
+}
+
+.q-field__control {
+  border-radius: 8px;
+}
