@@ -6,7 +6,8 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
-import { useCategoryStore } from 'src/features/category/store/categoryStore';
+import { useCategoryStore } from 'src/entities/category';
+import { useWishListStore } from 'src/entities/wish-list';
 import { RouteName } from '../enums/routeName';
 
 /*
@@ -19,7 +20,8 @@ import { RouteName } from '../enums/routeName';
  */
 
 export default defineRouter(function (/* { store, ssrContext } */) {
-  const category = useCategoryStore();
+  const categoryStore = useCategoryStore();
+  const wishList = useWishListStore();
 
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -37,16 +39,27 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async (to, from, next) => {
+    // console.log('test');
+
     if (to.name === RouteName.HOME && from.name === RouteName.CATEGORY) {
-      category.reset();
+      wishList.reset();
+      categoryStore.reset();
     }
 
     if (to.name === RouteName.CATEGORY) {
       const param = getParam(to.params.category);
 
+      // console.log(param);
+
       if (param) {
-        category.setCurrent(param);
+        await wishList.fetchByType(param);
+
+        categoryStore.setCurrent({
+          id: wishList.current!.categoryId,
+          name: wishList.current!.name,
+          value: wishList.current!.categoryType,
+        });
       }
     }
 

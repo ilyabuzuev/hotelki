@@ -1,0 +1,1 @@
+export { isWishDto } from '../lib';

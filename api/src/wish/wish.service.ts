@@ -1,62 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import type { WishCreateDto } from './dto/WishCreateDto';
-import { WishDeleteDto } from './dto/WishDeleteDto';
+import { ICreateWishDto } from './model/create-wish.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class WishService {
-  constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
-  async create(wishCreateDto: WishCreateDto) {
-    const { data, ...wish } = wishCreateDto;
+    async create(createWishDto: ICreateWishDto) {
+        const { name, wishListId, data } = createWishDto;
 
-    return await this.prisma.wish.create({
-      data: {
-        ...wish,
-        data: { create: data },
-      },
-      include: {
-        data: true,
-      },
-    });
-  }
+        const res = await this.prisma.wishList.findUnique({
+            where: { id: wishListId },
+        });
 
-  async delete(wishDeleteDto: WishDeleteDto) {
-    console.log(wishDeleteDto);
-    await this.prisma.wishData.deleteMany({
-      where: { wishId: wishDeleteDto.id },
-    });
+        if (!res) {
+            return { message: `Вишлист с id '${wishListId}' не найден` };
+        }
 
-    const res = await this.prisma.wish.delete({
-      where: { id: wishDeleteDto.id },
-    });
-
-    console.log(res);
-  }
-
-  async getByType(type: string) {
-    const res = await this.prisma.wish.findMany({
-      where: { categoryType: type },
-      select: {
-        id: true,
-        createdAt: true,
-        name: true,
-        data: {
-          select: {
-            key: true,
-            value: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    if (!res) {
-      return 'Список хотелок не найден';
+        return this.prisma.wish.create({
+            data: {
+                name,
+                wishListId,
+                data: { create: data },
+            },
+            select: {
+                id: true,
+                name: true,
+                data: {
+                    select: {
+                        key: true,
+                        value: true,
+                    },
+                },
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
     }
-
-    return res;
-  }
 }

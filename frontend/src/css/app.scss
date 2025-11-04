@@ -1,6 +1,11 @@
 // app global css in SCSS form
 @import './reset';
 
+body {
+  font-family: 'Cascadia Mono';
+  background-color: $bg;
+}
+
 .bg-surface {
   background-color: $surface;
 }

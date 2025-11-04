@@ -1,12 +1,6 @@
-export enum AttributeType {
-  STRING = 'STRING',
-  NUMBER = 'NUMBER',
-  BOOLEAN = 'BOOLEAN',
-  DATE = 'DATE',
-  TEXT = 'TEXT',
-}
+import { AttributeType } from '@prisma/client';
 
 export interface AttributeCreateDto {
-  name: string;
-  type: AttributeType;
+    name: string;
+    type: AttributeType;
 }

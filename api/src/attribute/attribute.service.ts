@@ -3,23 +3,72 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AttributeService {
-  constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
-  async getAllByCategoryName(value: string) {
-    console.log(value);
+    async getAllByCategoryId(id: string) {
+        const category = await this.prisma.category.findUnique({
+            where: { id },
+            select: {
+                attributes: {
+                    select: { name: true, type: true },
+                },
+            },
+        });
 
-    const res = await this.prisma.attribute.findMany({
-      where: {
-        category: {
-          value,
-        },
-      },
-    });
+        if (!category) {
+            return `Категория с ID ${id} не найдена`;
+        }
 
-    if (!res) {
-      return 'Атрибуты не найден';
+        return category.attributes;
+
+        // const res = await this.prisma.category.findMany({
+        //   where: {
+        //     category: {
+        //       id,
+        //     },
+        //   },
+        //   select: {
+        //     name: true,
+        //     type: true,
+        //   },
+        // });
+
+        // console.log(res);
+
+        // if (!res) {
+        //   return 'Атрибуты не найден';
+        // }
+
+        // return res;
     }
 
-    return res;
-  }
+    async getAllByCategoryName(value: string) {
+        console.log(value);
+        // const category = await this.prisma.category.findUnique({
+        //   where: {
+        //     value: value,
+        //   },
+        // });
+
+        // if (!category) {
+        //   return 'Категории с таким названием нет';
+        // }
+
+        const res = await this.prisma.attribute.findMany({
+            where: {
+                category: {
+                    value,
+                },
+            },
+            select: { name: true, type: true },
+        });
+
+        console.log(res);
+
+        if (!res) {
+            return 'Атрибуты не найден';
+        }
+
+        return res;
+    }
 }

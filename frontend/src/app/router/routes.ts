@@ -4,16 +4,16 @@ import { RouteName } from '../enums/routeName';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('src/app/layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        component: () => import('pages/IndexPage.vue'),
+        component: () => import('pages/index'),
         name: RouteName.HOME,
       },
       {
         path: ':category',
-        component: () => import('pages/IndexPage.vue'),
+        component: () => import('pages/index'),
         name: RouteName.CATEGORY,
       },
     ],
@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFoundPage.vue'),
+    component: () => import('pages/not-found'),
   },
 ];
 

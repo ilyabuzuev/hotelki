@@ -1,0 +1,1 @@
+export { WishListApi } from './endpoints';

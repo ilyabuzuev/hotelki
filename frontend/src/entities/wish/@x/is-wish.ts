@@ -1,0 +1,1 @@
+export { isWish } from '../lib';
